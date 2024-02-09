@@ -29,7 +29,7 @@ class TablesResponseModel {
 
 class Table {
   int id;
-  List<Order> orders;
+  List<ClientOrder> orders;
 
   Table({
     required this.id,
@@ -38,7 +38,8 @@ class Table {
 
   factory Table.fromJson(Map<String, dynamic> json) => Table(
         id: json["id"],
-        orders: List<Order>.from(json["orders"].map((x) => Order.fromJson(x))),
+        orders: List<ClientOrder>.from(
+            json["orders"].map((x) => ClientOrder.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -47,16 +48,16 @@ class Table {
       };
 }
 
-class Order {
+class ClientOrder {
   int id;
   List<Product> products;
 
-  Order({
+  ClientOrder({
     required this.id,
     required this.products,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) => Order(
+  factory ClientOrder.fromJson(Map<String, dynamic> json) => ClientOrder(
         id: json["id"],
         products: List<Product>.from(
             json["products"].map((x) => Product.fromJson(x))),
