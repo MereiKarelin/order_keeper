@@ -6,3 +6,5 @@ sealed class TablesEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class TablesStartEvent extends TablesEvent {}

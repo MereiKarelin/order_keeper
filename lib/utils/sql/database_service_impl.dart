@@ -10,15 +10,15 @@ class DatabaseServiceImpl implements DatabaseService {
 
   @override
   Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
+    // if (_database != null) {
+    // return _database!;
+    // }
     _database = await initialize();
     return _database!;
   }
 
   Future<String> get fullPath async {
-    const name = 'message.db';
+    const name = 'order_keeper.db';
     final path = await getDatabasesPath();
     return join(path, name);
   }
@@ -33,32 +33,28 @@ class DatabaseServiceImpl implements DatabaseService {
       // Добавляем начальные данные при создании базы данных
       final TablesResponseModel initialData = TablesResponseModel(
         tables: [
-          Table(
+          OTable(
             id: 1,
-            orders: [
-              ClientOrder(
-                id: 1,
-                products: [
-                  Product(id: 1, name: "Пицца", price: 12.99),
-                  Product(id: 3, name: "Паста", price: 10.99),
-                ],
-              ),
-            ],
+            order: ClientOrder(
+              id: 1,
+              products: [
+                Product(id: 1, name: "Пицца", price: 12.99, quantity: 1),
+                Product(id: 3, name: "Паста", price: 10.99, quantity: 2),
+              ],
+            ),
           ),
-          Table(
+          OTable(
             id: 2,
-            orders: [
-              ClientOrder(
-                id: 2,
-                products: [
-                  Product(id: 2, name: "Салат", price: 8.99),
-                ],
-              ),
-            ],
+            order: ClientOrder(
+              id: 2,
+              products: [
+                Product(id: 2, name: "Салат", price: 8.99, quantity: 2),
+              ],
+            ),
           ),
-          Table(
+          OTable(
             id: 3,
-            orders: [],
+            order: null,
           ),
         ],
       );
@@ -74,37 +70,49 @@ class DatabaseServiceImpl implements DatabaseService {
   @override
   Future<void> insertInitialData(
       Database database, TablesResponseModel initialData) async {
-    // Вставляем начальные данные в таблицу "tables"
-    for (Table table in initialData.tables) {
-      await database.insert('tables', table.toJson(),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+    // Вставляем начальные данные в таблицу "orders"
+    for (OTable table in initialData.tables) {
+      if (table.order != null) {
+        for (Product product in table.order!.products!) {
+          await database.insert('orders', {
+            'table_id': table.id,
+            'product_id': product.id,
+            'quantity': product.quantity,
+          });
+        }
+      }
     }
   }
 
   @override
   Future<void> create(Database database, int version) async {
-    // Создаем таблицу для категорий сообщений (людей)
+    // Создаем таблицу для столов
     await database.execute('''
-          CREATE TABLE tables (
-            id INTEGER PRIMARY KEY,
-            name TEXT
-          )
-        ''');
+    CREATE TABLE tables (
+      id INTEGER PRIMARY KEY,
+      name TEXT
+    )
+  ''');
+
+    // Создаем таблицу для продуктов
     await database.execute('''
-          CREATE TABLE orders (
-            id INTEGER PRIMARY KEY,
-            table_id INTEGER,
-            FOREIGN KEY (table_id) REFERENCES products (id)
-          )
-        ''');
+    CREATE TABLE products (
+      id INTEGER PRIMARY KEY,
+      name TEXT,
+      price REAL
+    )
+  ''');
+
+    // Создаем таблицу для заказов
     await database.execute('''
-          CREATE TABLE products (
-            id INTEGER PRIMARY KEY,
-            order_id INTEGER,
-            name TEXT,
-            price REAL,
-            FOREIGN KEY (order_id) REFERENCES products (id)
-          )
-        ''');
+    CREATE TABLE orders (
+      id INTEGER PRIMARY KEY,
+      table_id INTEGER,
+      product_id INTEGER,
+      quantity INTEGER,
+      FOREIGN KEY (table_id) REFERENCES tables (id),
+      FOREIGN KEY (product_id) REFERENCES products (id)
+    )
+  ''');
   }
 }
