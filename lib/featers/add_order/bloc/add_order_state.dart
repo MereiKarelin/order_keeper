@@ -17,4 +17,6 @@ class AddOrderLoadedState extends AddOrderState {
   const AddOrderLoadedState({required this.data, required this.table});
 }
 
+class AddOrderSuccessState extends AddOrderState {}
+
 class AddOrderErrorState extends AddOrderState {}

@@ -3,12 +3,14 @@ import 'package:order_keeper/data/models/response/orders_response_model.dart';
 import 'package:order_keeper/data/models/response/products_respinse_model.dart';
 import 'package:order_keeper/data/models/response/tables_response_model.dart';
 import 'package:order_keeper/utils/sql/database_service.dart';
+import 'package:sqflite/sqflite.dart';
 
 abstract class WatersLocalDataSource {
   WatersLocalDataSource(DatabaseService databaseService);
 
   Future<List<TableModel>> getAllTables();
   Future<TableModel> getTableById(int tableId);
+  Future<void> addOrder(OrderResponseModel order);
   Future<ProductsResponseModel> getAllProducts();
 }
 
@@ -47,6 +49,36 @@ class WatersLocalDataSourceImpl implements WatersLocalDataSource {
     return tables;
   }
 
+  @override
+  Future<void> addOrder(OrderResponseModel orderResponse) async {
+    final db = await _databaseService.database;
+
+    List<Map<String, dynamic>> existingOrderResponses = await db.query(
+      'OrderResponse',
+      where: 'table_id = ? AND product_name = ?',
+      whereArgs: [orderResponse.tableId, orderResponse.productName],
+    );
+
+    if (existingOrderResponses.isNotEmpty) {
+      int currentQuantity = existingOrderResponses.first['quantity'];
+      int newQuantity = currentQuantity + (orderResponse.quantity ?? 0);
+
+      await db.update(
+        'OrderResponse',
+        {'quantity': newQuantity},
+        where: 'table_id = ? AND product_name = ?',
+        whereArgs: [orderResponse.tableId, orderResponse.productName],
+      );
+    } else {
+      await db.insert(
+        'OrderResponse',
+        orderResponse.toMap()..['table_id'] = orderResponse.tableId,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
+
+  @override
   Future<TableModel> getTableById(int tableId) async {
     final db = await _databaseService.database;
     List<Map<String, dynamic>> tableMaps =

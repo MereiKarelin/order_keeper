@@ -20,13 +20,14 @@ class TablesScreen extends StatelessWidget {
                   ? ListView.builder(
                       itemCount: state.data.length,
                       itemBuilder: (BuildContext context, int index) => InkWell(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AddOrderScreen(
                                           tableId: state.data[index].id ?? 0,
                                         )));
+                            _tableBloc.add(TablesStartEvent());
                           },
                           child: CategoryWidget(table: state.data[index])))
                   : const CircularProgressIndicator(),
