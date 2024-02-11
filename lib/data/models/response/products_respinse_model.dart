@@ -29,9 +29,9 @@ class ProductsResponseModel {
 }
 
 class Product {
-  int id;
-  String name;
-  double price;
+  int? id;
+  String? name;
+  String? price;
 
   Product({
     required this.id,
@@ -42,7 +42,7 @@ class Product {
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
         name: json["name"],
-        price: json["price"]?.toDouble(),
+        price: json["price"],
       );
 
   Map<String, dynamic> toJson() => {

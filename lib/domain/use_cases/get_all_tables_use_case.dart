@@ -4,7 +4,7 @@ import 'package:order_keeper/domain/repository/waiter_repo.dart';
 import 'package:order_keeper/domain/use_cases/base_use_case.dart';
 
 @lazySingleton
-class GetAllTablesUseCase implements UseCase<TablesResponseModel, NoParams> {
+class GetAllTablesUseCase implements UseCase<List<TableModel>, NoParams> {
   final WaiterRepo repository;
 
   const GetAllTablesUseCase({
@@ -12,7 +12,7 @@ class GetAllTablesUseCase implements UseCase<TablesResponseModel, NoParams> {
   });
 
   @override
-  Future<TablesResponseModel> call(NoParams params) async {
+  Future<List<TableModel>> call(NoParams params) async {
     return await repository.getAllTables();
   }
 }

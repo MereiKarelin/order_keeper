@@ -12,7 +12,7 @@ final class TablesInitial extends TablesState {}
 class TablesLoadingState extends TablesState {}
 
 class TablesLoadedState extends TablesState {
-  final TablesResponseModel data;
+  final List<TableModel> data;
   const TablesLoadedState({required this.data});
 }
 

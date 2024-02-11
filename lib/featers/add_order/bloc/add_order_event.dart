@@ -6,3 +6,8 @@ sealed class AddOrderEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class AddOrderStartEvent extends AddOrderEvent {
+  final int tableId;
+  const AddOrderStartEvent({required this.tableId});
+}

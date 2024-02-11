@@ -1,4 +1,3 @@
-import 'package:order_keeper/data/models/response/tables_response_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class DatabaseService {
@@ -8,8 +7,7 @@ abstract class DatabaseService {
 
   Future<void> create(Database database, int version);
 
-  Future<void> insertInitialData(
-      Database database, TablesResponseModel initialData);
+  Future<void> insertInitialData(Database database);
 
   void upgrade(Database database, int oldVersion, int newVersion);
 }

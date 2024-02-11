@@ -1,14 +1,30 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// InjectableConfigGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint
+// coverage:ignore-file
+
+// ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
-import 'package:order_keeper/utils/sql/database_service.dart' as _i3;
-import 'package:order_keeper/utils/sql/database_service_impl.dart' as _i4;
 import 'package:order_keeper/data/datasource/waiters_local_datasourse.dart'
     as _i5;
 import 'package:order_keeper/data/repository_impl/waiter_repo_impl.dart' as _i7;
 import 'package:order_keeper/domain/repository/waiter_repo.dart' as _i6;
-import 'package:order_keeper/domain/use_cases/get_all_tables_use_case.dart'
+import 'package:order_keeper/domain/use_cases/get_all_products_use_case.dart'
     as _i8;
-import 'package:order_keeper/featers/tables/bloc/tables_bloc.dart' as _i9;
+import 'package:order_keeper/domain/use_cases/get_all_tables_use_case.dart'
+    as _i9;
+import 'package:order_keeper/domain/use_cases/get_table_by_id_use_case.dart'
+    as _i10;
+import 'package:order_keeper/featers/add_order/bloc/add_order_bloc.dart'
+    as _i12;
+import 'package:order_keeper/featers/tables/bloc/tables_bloc.dart' as _i11;
+import 'package:order_keeper/utils/sql/database_service.dart' as _i3;
+import 'package:order_keeper/utils/sql/database_service_impl.dart' as _i4;
 
 _i1.GetIt $initGetIt(
   _i1.GetIt get, {
@@ -25,10 +41,17 @@ _i1.GetIt $initGetIt(
       () => _i5.WatersLocalDataSourceImpl(gh<_i3.DatabaseService>()));
   gh.lazySingleton<_i6.WaiterRepo>(() => _i7.WaiterRepoImpl(
       waiterLocalDataSource: gh<_i5.WatersLocalDataSource>()));
-  gh.lazySingleton<_i8.GetAllTablesUseCase>(
-      () => _i8.GetAllTablesUseCase(repository: gh<_i6.WaiterRepo>()));
-  gh.factory<_i9.TablesBloc>(() => _i9.TablesBloc(
-        getAllTablesUseCase: gh<_i8.GetAllTablesUseCase>(),
+  gh.lazySingleton<_i8.GetAllProductsUseCase>(
+      () => _i8.GetAllProductsUseCase(repository: gh<_i6.WaiterRepo>()));
+  gh.lazySingleton<_i9.GetAllTablesUseCase>(
+      () => _i9.GetAllTablesUseCase(repository: gh<_i6.WaiterRepo>()));
+  gh.lazySingleton<_i10.GetTableByIdUseCase>(
+      () => _i10.GetTableByIdUseCase(repository: gh<_i6.WaiterRepo>()));
+  gh.factory<_i11.TablesBloc>(() =>
+      _i11.TablesBloc(getAllTablesUseCase: gh<_i9.GetAllTablesUseCase>()));
+  gh.factory<_i12.AddOrderBloc>(() => _i12.AddOrderBloc(
+        getAllProductsUseCase: gh<_i8.GetAllProductsUseCase>(),
+        getTableByIdUseCase: gh<_i10.GetTableByIdUseCase>(),
       ));
   return get;
 }
