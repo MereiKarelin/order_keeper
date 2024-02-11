@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:order_keeper/featers/tables/tables_screen.dart';
 import 'package:order_keeper/utils/injectable/configurator.dart';
 
+//Start second day
+
 void main() {
   configureDependencies();
   runApp(const MyApp());
